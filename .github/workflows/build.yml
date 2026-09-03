@@ -40,13 +40,6 @@ jobs:
              echo ${{ secrets.SMTPPASSWORD }}
              ./mvnw -B verify
 
-      - name: Test Report
-        uses: actions/upload-artifact@v7
-        with:
-          name: test-reports
-          path: target/surefire-reports
-          if-no-files-found: warn
-
       - name: Upload deployable jar
         uses: actions/upload-artifact@v7
         with:
@@ -54,10 +47,6 @@ jobs:
           path: target/simpleweb.jar
           if-no-files-found: error
           retention-days: 7
-
-      - name: send fail email
-        if: failure()
-        run: echo 'send fail email'
 
       - name: Write job summary
         if: always()
@@ -72,30 +61,48 @@ jobs:
             echo "| 結果 | ${{ job.status }} |"
           } >> "$GITHUB_STEP_SUMMARY"
 
-  ajob:
-    runs-on: ubuntu-24.04
-    needs: build
-    steps:
-      - name: Print
-        run: echo bjob
-
-  bjob:
-    runs-on: ubuntu-24.04
-    needs: build
-    steps:
-      - name: Print
-        run: echo ajob
-
   
   deploy:
     runs-on: ubuntu-24.04
     environment: Test
-    needs:
-      - build
-      - ajob
-      - bjob
+    needs: build
+    env:
+      VM_PUBLIC_IP: "20.210.89.243"
     steps:
-      - name: Print
-        run: echo ${{ vars.Account }}
-      
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.1.0
+        with:
+          name: simpleweb-jar
+          path: target/
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -H "${{ env.VM_PUBLIC_IP }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Copy jar to VM
+        run: |
+          scp -i ~/.ssh/id_deploy target/simpleweb.jar \
+            azureuser@${{ env.VM_PUBLIC_IP }}:~/simpleweb.jar
+
+      - name: Restart service on VM
+        run: |
+          ssh -i ~/.ssh/id_deploy azureuser@${{ env.VM_PUBLIC_IP }} \
+            "set -euo pipefail
+             sudo install -o simpleweb -g simpleweb -m 0644 ~/simpleweb.jar /opt/simpleweb/test/simpleweb.jar
+             rm -f ~/simpleweb.jar
+             printf 'APP_BUILD_SHA=%s\nAPP_BUILD_TIME=%s\n' '${{ github.sha }}' \"\$(date -u +%FT%TZ)\" | sudo tee /opt/simpleweb/test/app.env >/dev/null
+             sudo systemctl restart simpleweb-test
+             sleep 5
+             sudo systemctl is-active simpleweb-test"
+             
+      - name: Smoke test
+        run: |
+          for i in $(seq 1 10); do
+            curl -fsS "http://${{ env.VM_PUBLIC_IP }}:8080/api/info" && exit 0
+            echo "等待應用程式啟動... ($i/10)" && sleep 6
+          done
+          exit 1
 
