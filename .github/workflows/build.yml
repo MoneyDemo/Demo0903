@@ -15,6 +15,7 @@ jobs:
   build:
     name: Build Job
     runs-on: ubuntu-24.04-arm
+    environment: Prod
     steps:
       - name: Checkout
         uses: actions/checkout@v6.1.0
@@ -30,6 +31,7 @@ jobs:
           buildConfig: Release
         run: | 
              echo ${{ env.buildConfig }}
+             echo ${{ vars.Account }}
              ./mvnw -B compile
 
       - name: Build
@@ -72,12 +74,10 @@ jobs:
 
   deploy:
     runs-on: ubuntu-24.04
+    environment: Test
+    
     steps:
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.1.0
-        with:
-          # Artifact name
-          name: simpleweb-jar
-          # Destination path
-          path: target/
+      - name: Print
+        run: echo ${{ vars.Account }}
+      
 
