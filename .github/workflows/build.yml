@@ -70,7 +70,8 @@ jobs:
       VM_PUBLIC_IP: "20.210.89.243"
     steps:
       - name: Download a Build Artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v7.0.0
+        with:
           name: simpleweb-jar
           path: target/
 
