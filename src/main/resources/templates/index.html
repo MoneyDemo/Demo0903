@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${info.application} + ' — ' + ${info.environment}">SimpleWeb</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}">
+</head>
+<body>
+
+<header class="banner" th:classappend="${bannerClass}">
+    <p class="banner-label">ENVIRONMENT</p>
+    <h1 class="banner-env" th:text="${#strings.toUpperCase(info.environment)}">LOCAL</h1>
+    <p class="banner-app" th:text="${info.application} + ' v' + ${info.version}">SimpleWeb v1.0.0</p>
+</header>
+
+<main class="content">
+    <h2>Deployment details</h2>
+
+    <div class="cards">
+        <div class="card">
+            <span class="card-label">Build SHA</span>
+            <span class="card-value mono" th:text="${info.buildSha}">dev</span>
+        </div>
+        <div class="card">
+            <span class="card-label">Build time</span>
+            <span class="card-value mono" th:text="${info.buildTime}">unknown</span>
+        </div>
+        <div class="card">
+            <span class="card-label">Hostname</span>
+            <span class="card-value mono" th:text="${info.hostname}">localhost</span>
+        </div>
+        <div class="card">
+            <span class="card-label">Version</span>
+            <span class="card-value mono" th:text="${info.version}">1.0.0</span>
+        </div>
+        <div class="card">
+            <span class="card-label">Server time</span>
+            <span class="card-value mono" th:text="${info.serverTime}">-</span>
+        </div>
+        <div class="card">
+            <span class="card-label">Java version</span>
+            <span class="card-value mono" th:text="${info.javaVersion}">21</span>
+        </div>
+    </div>
+
+    <h2>Endpoints</h2>
+    <ul class="links">
+        <li><a th:href="@{/api/info}">/api/info</a> — 同樣的資訊，JSON 格式</li>
+        <li><a th:href="@{/actuator/health}">/actuator/health</a> — health check</li>
+    </ul>
+
+    <p class="footer">GH-200 GitHub Actions 教學示範應用程式</p>
+</main>
+
+</body>
+</html>

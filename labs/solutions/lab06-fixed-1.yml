@@ -1,0 +1,31 @@
+# 修正重點：
+#   `steps:` 底下每一個 step 都是「清單項目」，必須以 `- ` 開頭；
+#   同一個 step 內的所有 key（name / uses / with / run）要對齊在
+#   `- ` 之後的同一個縮排層級（本檔為第 9 欄，也就是 8 個空白）。
+#   原始檔的第 2 個 step 把 `uses:` 掉到 `- name:` 的上一層，YAML 直接解析失敗。
+
+name: Lab06 Broken 1
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build
+        run: |
+          chmod +x ./mvnw
+          ./mvnw -B verify

@@ -1,0 +1,24 @@
+# ---- build stage -------------------------------------------------------------
+FROM maven:3.9-eclipse-temurin-21 AS build
+WORKDIR /workspace
+
+# Dependencies first so Docker can cache them between source-only changes.
+COPY pom.xml .
+RUN mvn -B -e dependency:go-offline
+
+COPY src ./src
+RUN mvn -B package
+
+# ---- runtime stage -----------------------------------------------------------
+FROM eclipse-temurin:21-jre
+WORKDIR /opt/simpleweb
+
+COPY --from=build /workspace/target/simpleweb.jar ./simpleweb.jar
+
+ENV SERVER_PORT=8080 \
+    APP_ENVIRONMENT=local \
+    APP_BUILD_SHA=dev \
+    APP_BUILD_TIME=unknown
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "/opt/simpleweb/simpleweb.jar"]

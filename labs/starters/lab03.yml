@@ -1,0 +1,63 @@
+# ---------------------------------------------------------------------------
+# Lab 03 starter — 兩個 job + artifact 傳遞
+#
+# 目的地：.github/workflows/lab03-artifact.yml
+#
+# 情境：build job 產生 target/simpleweb.jar，
+#       package job 透過 artifact 拿到那個 jar 並檢查它。
+#       兩個 job 跑在「不同的 runner」上，檔案不會自動共用，
+#       所以一定要用 artifact 傳遞。
+# ---------------------------------------------------------------------------
+
+name: Lab03 Package Artifact
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build
+        run: |
+          chmod +x ./mvnw
+          ./mvnw -B verify
+
+      # TODO 1: 上傳 artifact
+      #   action: actions/upload-artifact@v7
+      #   with:
+      #     name: ???            # 建議 simpleweb-jar
+      #     path: ???            # target/simpleweb.jar
+      #     if-no-files-found: error
+      #     retention-days: 1
+
+  package:
+    runs-on: ubuntu-latest
+
+    # TODO 2: 讓這個 job 等 build 成功後才執行
+    #   提示：needs:
+
+    steps:
+      # TODO 3: 下載 artifact
+      #   action: actions/download-artifact@v7
+      #   with:
+      #     name: ???            # 要和上傳時的 name 一模一樣
+      #     path: ???            # 建議 downloaded/
+
+      # TODO 4: 驗證 jar 真的拿到了
+      #   要求：列出檔案、印出大小，並用 `unzip -l` 或 `ls -l` 確認
+      #   如果檔案不存在，這個 step 必須讓 job 失敗（exit 1）
+      - name: Placeholder（做完上面 TODO 後可以刪掉）
+        run: echo "請把上面的 TODO 換成真正的 steps"

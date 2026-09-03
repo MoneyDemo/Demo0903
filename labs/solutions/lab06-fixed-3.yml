@@ -1,0 +1,32 @@
+# 修正重點：
+#   OIDC 登入時，azure/login 需要向 GitHub 索取一個 id token。
+#   只有當這個 job（或整份 workflow）有 `id-token: write` 權限時，
+#   runner 才會被注入 ACTIONS_ID_TOKEN_REQUEST_URL / ACTIONS_ID_TOKEN_REQUEST_TOKEN。
+#   注意：在 job 層級寫 permissions 會「整組覆蓋」workflow 層級的設定，
+#   所以需要的權限要一次列齊（這裡同時保留 contents: read）。
+
+name: Lab06 Broken 3
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  whoami:
+    runs-on: ubuntu-latest
+    environment: test
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Azure login (OIDC)
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Show current Azure account
+        run: az account show --output table

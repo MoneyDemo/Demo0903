@@ -1,0 +1,31 @@
+# ---------------------------------------------------------------------------
+# Lab 06 broken #2
+#
+# 這份 YAML 語法完全正確，workflow 也會被觸發並開始跑，
+# 但 build step 一定會失敗。
+#
+# 你的任務：從 log 找出失敗原因，用一行修正它。
+# ---------------------------------------------------------------------------
+
+name: Lab06 Broken 2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build
+        run: |
+          chmod +x ./mvnw
+          ./mvnw -B verify

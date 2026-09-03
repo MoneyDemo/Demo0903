@@ -1,0 +1,49 @@
+# ---------------------------------------------------------------------------
+# Lab 02 starter — Build & Test（Maven Wrapper + setup-java + Step Summary）
+#
+# 目的地：.github/workflows/lab02-build.yml
+#
+# 重要：學員機器上「沒有安裝 Maven」，一律使用 repo 內的 Maven Wrapper
+#       Linux runner:   ./mvnw -B verify
+#       Windows 本機:   .\mvnw.cmd -B verify
+# ---------------------------------------------------------------------------
+
+name: Lab02 Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+# TODO 1: 加上最小權限。這個 workflow 只需要讀取原始碼。
+#   permissions:
+#     contents: ???
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # TODO 2: 把原始碼抓到 runner 上。
+      #   使用 actions/checkout@v5
+      #   （沒有這一步，runner 上是空的，找不到 pom.xml）
+
+      # TODO 3: 安裝 JDK。
+      #   使用 actions/setup-java@v6
+      #   with:
+      #     distribution: ???   # 本課程使用 temurin
+      #     java-version: ???   # 本課程使用 21（記得加引號，避免被讀成數字）
+
+      # TODO 4: 讓 mvnw 可執行（Linux runner 需要）
+      #   run: chmod +x ./mvnw
+
+      # TODO 5: 執行 build + test
+      #   run: ./mvnw -B verify
+
+      # TODO 6: 把結果寫進 Job Summary
+      #   把 Markdown append 到 $GITHUB_STEP_SUMMARY 這個檔案，例如：
+      #     echo "## Build 結果" >> "$GITHUB_STEP_SUMMARY"
+      #   要求：至少顯示 commit SHA、branch，以及 target/simpleweb.jar 是否存在
+      #   提示：加上 `if: always()` 讓 build 失敗時 summary 仍然會產生
+      - name: Placeholder（做完上面 TODO 後可以刪掉這個 step）
+        run: echo "請把上面的 TODO 換成真正的 steps"

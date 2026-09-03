@@ -1,0 +1,33 @@
+# ---------------------------------------------------------------------------
+# Lab 06 broken #1 — 這個檔案「故意」是壞的 YAML，這就是題目本身。
+#
+# 症狀：push 之後 Actions 頁面上根本看不到這個 workflow 的執行紀錄，
+#       或是出現一個紅色的 "workflow file issue" 標記。
+#
+# 你的任務：找出縮排錯在哪，修好它，讓 workflow 能被 GitHub 接受並執行。
+# 不要整份重寫，只改必要的地方。
+# ---------------------------------------------------------------------------
+
+name: Lab06 Broken 1
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Set up JDK 21
+      uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Build
+        run: |
+          chmod +x ./mvnw
+          ./mvnw -B verify

@@ -1,0 +1,57 @@
+# ---------------------------------------------------------------------------
+# Lab 06 starter — 除錯記錄表（worksheet）
+#
+# ⚠️ 這個檔案「不是 workflow」，請不要放到 .github/workflows/ 底下。
+#    建議放在 repo 根目錄的 lab06-diagnosis.yml，或乾脆只在本機填寫。
+#
+# 四個壞掉的 workflow 在 starters/lab06-broken-1.yml ~ broken-4.yml。
+# 每修好一個，就把下面對應的欄位填完。
+# 重點不是「改對」，而是「你怎麼從 log 知道它錯在哪」。
+# ---------------------------------------------------------------------------
+
+student: TODO 填你的名字
+repo: TODO 填你的 repo，例如 <your-account>/20260903-GH200
+
+findings:
+  - case: broken-1
+    # TODO: 你在哪裡看到錯誤？（Actions 頁面 / commit 上的紅點 / workflow 檔案本身）
+    where_i_saw_it: TODO
+    # TODO: 錯誤訊息原文（貼一行就好）
+    error_message: TODO
+    # TODO: 根本原因，一句話
+    root_cause: TODO
+    # TODO: 你改了什麼
+    fix: TODO
+
+  - case: broken-2
+    where_i_saw_it: TODO
+    failing_step_name: TODO
+    error_message: TODO
+    root_cause: TODO
+    fix: TODO
+
+  - case: broken-3
+    where_i_saw_it: TODO
+    failing_step_name: TODO
+    error_message: TODO
+    root_cause: TODO
+    fix: TODO
+
+  - case: broken-4
+    where_i_saw_it: TODO
+    failing_step_name: TODO
+    error_message: TODO
+    root_cause: TODO
+    fix: TODO
+
+debug_logging:
+  # TODO: 你設定了哪兩個 repository secret 來打開 debug log？
+  secrets_i_added: [ TODO, TODO ]
+  # TODO: 打開之後，log 裡多出現了什麼你原本看不到的資訊？
+  what_i_learned: TODO
+
+rerun:
+  # TODO: 你用了哪一種重跑方式？(re-run all jobs / re-run failed jobs / re-run with debug logging)
+  method_used: TODO
+  # TODO: 只重跑失敗的 job 有什麼好處？
+  why: TODO

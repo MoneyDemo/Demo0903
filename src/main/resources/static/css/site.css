@@ -1,0 +1,139 @@
+:root {
+    --ink: #1b1f23;
+    --muted: #6a737d;
+    --line: #e1e4e8;
+    --surface: #ffffff;
+    --page: #f6f8fa;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: "Segoe UI", "Noto Sans TC", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+}
+
+.banner {
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+    color: #ffffff;
+}
+
+.banner-label {
+    margin: 0;
+    font-size: 0.95rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.banner-env {
+    margin: 0.25rem 0 0.5rem;
+    font-size: clamp(3rem, 12vw, 7rem);
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
+}
+
+.banner-app {
+    margin: 0;
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+.env-test {
+    background: linear-gradient(135deg, #0b5fff, #0a3fa8);
+}
+
+.env-production {
+    background: linear-gradient(135deg, #e8590c, #c92a2a);
+}
+
+.env-local {
+    background: linear-gradient(135deg, #6a737d, #424a53);
+}
+
+.content {
+    max-width: 62rem;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 3.5rem;
+}
+
+h2 {
+    font-size: 1.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    margin: 2rem 0 1rem;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    padding: 1.1rem 1.25rem;
+}
+
+.card-label {
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.card-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    word-break: break-all;
+}
+
+.mono {
+    font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+}
+
+.links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.5rem;
+}
+
+.links li {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    padding: 0.85rem 1.25rem;
+}
+
+.links a {
+    font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+    font-weight: 600;
+    color: #0b5fff;
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+    margin-top: 2.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+}

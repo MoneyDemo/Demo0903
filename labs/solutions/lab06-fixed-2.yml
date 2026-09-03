@@ -1,0 +1,32 @@
+# 修正重點：
+#   runner 一開始是「乾淨的空機器」，不會自動包含你的原始碼。
+#   少了 actions/checkout，工作目錄裡沒有 pom.xml、也沒有 mvnw，
+#   所以 log 會出現 `./mvnw: No such file or directory`
+#   或 `The goal you specified requires a project to execute but there is no POM in this directory`。
+#   解法：在所有需要原始碼的 step 之前加上 actions/checkout@v5。
+
+name: Lab06 Broken 2
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Build
+        run: |
+          chmod +x ./mvnw
+          ./mvnw -B verify

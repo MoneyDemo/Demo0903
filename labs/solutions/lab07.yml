@@ -1,0 +1,39 @@
+name: Lab07 Self-hosted Runner
+
+# 只用手動觸發：self-hosted runner 不可以暴露給不受信任的 fork PR。
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  on-self-hosted:
+    runs-on: [ self-hosted, Linux, X64, gh200 ]
+    steps:
+      - name: Who am I
+        run: |
+          echo "Hostname   : $(hostname)"
+          echo "Kernel     : $(uname -a)"
+          echo "User       : $(whoami)"
+          echo "Runner name: ${RUNNER_NAME:-unknown}"
+          echo "Runner OS  : ${RUNNER_OS:-unknown}"
+          echo "Workdir    : $(pwd)"
+
+      - name: Check preinstalled tools
+        run: |
+          java -version 2>&1 || echo "⚠️ 這台 self-hosted runner 沒有安裝 Java"
+          git --version || echo "⚠️ 沒有 git"
+
+      - name: Summary
+        run: |
+          {
+            echo "## Lab07 Self-hosted runner"
+            echo ""
+            echo "- Runner name: \`${RUNNER_NAME:-unknown}\`"
+            echo "- Hostname: \`$(hostname)\`"
+            echo "- Labels: self-hosted, Linux, X64, gh200"
+            echo ""
+            echo "> GitHub 託管 runner 每次都是全新的乾淨機器；"
+            echo "> self-hosted runner 的狀態會保留，工具要自己裝、也要自己清。"
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,37 @@
+# ---------------------------------------------------------------------------
+# Lab 07 starter（選修 / 進階）— self-hosted runner
+#
+# 目的地：.github/workflows/lab07-selfhosted.yml
+#
+# ⚠️ 安全提醒：self-hosted runner 絕對不可以用來執行不受信任的 fork PR。
+#    這個 workflow 只使用 workflow_dispatch，不要加上 pull_request 觸發。
+# ---------------------------------------------------------------------------
+
+name: Lab07 Self-hosted Runner
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  on-self-hosted:
+    # TODO 1: 指定要跑在你在 VM 上註冊的 self-hosted runner。
+    #   需要同時符合多個標籤時，runs-on 要寫成「清單」。
+    #   建議標籤：self-hosted, Linux, X64, gh200
+    #   runs-on: [ ???, ??? ]
+    runs-on: TODO-RUNNER-LABELS
+
+    steps:
+      # TODO 2: 印出這台機器的資訊，證明它真的是 VM 而不是 GitHub 託管 runner
+      #   建議印出：hostname / uname -a / whoami / RUNNER_NAME / RUNNER_OS
+      - name: Who am I
+        run: echo "TODO"
+
+      # TODO 3: 印出 self-hosted runner 上已安裝的 Java 版本
+      #   注意：GitHub 託管 runner 預裝很多工具，self-hosted 什麼都沒有——
+      #   如果這一步失敗，那正是這個 lab 想讓你體會的重點。
+      #   （可以用 `java -version || echo "這台機器沒有 Java"`）
+
+      # TODO 4: 把 runner 的環境資訊寫進 $GITHUB_STEP_SUMMARY

@@ -1,0 +1,68 @@
+# ---------------------------------------------------------------------------
+# Lab 06 解答 — 除錯記錄表參考答案
+# 個別 workflow 的修正版請看：
+#   solutions/lab06-fixed-1.yml ~ solutions/lab06-fixed-4.yml
+# ---------------------------------------------------------------------------
+
+findings:
+  - case: broken-1
+    where_i_saw_it: >-
+      Actions 頁面上看不到這次執行；改在 repo 的檔案清單／commit 上看到
+      workflow 檔案被標示為有問題（invalid workflow file）。
+    error_message: >-
+      Invalid workflow file ... You have an error in your yaml syntax on line 23
+    root_cause: >-
+      steps 是一個「清單」，每個 step 必須以 "- " 開頭，且同一個 step 的
+      name / uses / with 要對齊。第二個 step 的 uses 縮排少了兩格，
+      掉到清單項目外面，YAML parser 直接失敗。
+    fix: 把該 step 的 uses 對齊到 name 的同一欄（在 "- " 之後）。
+
+  - case: broken-2
+    where_i_saw_it: Actions run → build job → Build step（紅色 X）
+    failing_step_name: Build
+    error_message: >-
+      ./mvnw: No such file or directory
+      （或 "there is no POM in this directory"）
+    root_cause: 沒有 actions/checkout，runner 上根本沒有原始碼。
+    fix: "在 Build 之前加入 `- uses: actions/checkout@v5`。"
+
+  - case: broken-3
+    where_i_saw_it: Actions run → whoami job → Azure login step
+    failing_step_name: Azure login (OIDC)
+    error_message: >-
+      Unable to get ACTIONS_ID_TOKEN_REQUEST_URL env variable
+      （OIDC / federated credential 相關錯誤）
+    root_cause: >-
+      缺少 id-token: write 權限，runner 沒有被注入索取 OIDC token 所需的環境變數。
+    fix: >-
+      在 job 加上 permissions: { contents: read, id-token: write }。
+      注意 job 層級的 permissions 會整組覆蓋 workflow 層級，要一次列齊。
+
+  - case: broken-4
+    where_i_saw_it: Actions run → package job → Download jar step
+    failing_step_name: Download jar
+    error_message: >-
+      Provided artifact name input during validation is empty
+      （或找不到指定名稱的 artifact）
+    root_cause: >-
+      build job 沒有宣告 outputs，needs.build.outputs.jar-name 求值為空字串。
+      未定義的 context 欄位不會報錯，只會變成空字串，這是很容易漏看的陷阱。
+    fix: >-
+      給產生值的 step 一個 id、用 $GITHUB_OUTPUT 寫出值，
+      再於 build job 宣告 outputs.jar-name 對應該 step 的輸出。
+
+debug_logging:
+  secrets_i_added: [ ACTIONS_STEP_DEBUG, ACTIONS_RUNNER_DEBUG ]
+  what_i_learned: >-
+    ACTIONS_STEP_DEBUG=true 會讓每個 step 多印出 ##[debug] 訊息
+    （輸入參數、expression 求值結果、環境變數等）；
+    ACTIONS_RUNNER_DEBUG=true 則會產生 runner 診斷 log，可從執行紀錄下載。
+    broken-4 的空字串問題，開了 step debug 之後可以直接看到
+    download-artifact 收到的 name 是空的。
+
+rerun:
+  method_used: Re-run failed jobs
+  why: >-
+    只重跑失敗的 job 可以沿用先前成功 job 的結果與 artifact，
+    節省時間與執行分鐘數；驗證修正時回饋也更快。
+    需要重新驗證整條流程時才用 Re-run all jobs。

@@ -1,0 +1,39 @@
+# ---------------------------------------------------------------------------
+# Lab 01 starter — 第一個 workflow
+#
+# 使用方式：
+#   1. 把這個檔案複製到你 repo 的 .github/workflows/lab01-hello.yml
+#   2. 把每一個 TODO 補完（請自己打字，不要整段貼解答）
+#   3. commit + push，然後到 repo 的 Actions 頁面觀看執行結果
+#
+# 注意：workflow 檔案「一定」要放在 .github/workflows/ 目錄下，
+#       放在其他資料夾 GitHub 不會執行它。
+# ---------------------------------------------------------------------------
+
+name: Lab01 Hello
+
+# TODO 1: 加入觸發事件區塊 `on:`
+#   需求 a) push 到 main 分支時自動執行
+#   需求 b) 也可以在 Actions 頁面按按鈕手動執行 (workflow_dispatch)
+#   提示：`on:` 底下縮排 2 格；`workflow_dispatch:` 後面不需要任何值。
+#
+#   on:
+#     push:
+#       branches: [ ??? ]
+#     ???:
+
+jobs:
+  # TODO 2: 把這個 job 的 id 改成 hello（YAML 的 key 就是 job id）
+  todo-job-id:
+    # TODO 3: 指定 runner。GitHub 託管的 Ubuntu runner 標籤是什麼？
+    runs-on: TODO-RUNNER-LABEL
+
+    steps:
+      # TODO 4: 這個 step 要印出一段文字，內容自訂，
+      #         但必須包含 workflow 的執行編號 github.run_number
+      #         提示：用 ${{ github.run_number }}
+      - name: Say hello
+        run: echo "TODO 換成你自己的訊息"
+
+      # TODO 5: 再加一個 step，印出目前的 branch 名稱與 commit SHA
+      #         提示：github.ref_name 與 github.sha
