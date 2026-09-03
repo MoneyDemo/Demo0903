@@ -1,0 +1,19 @@
+name: Build
+
+on: 
+  push:
+    branches: '*'
+  workflow_dispatch: 
+
+jobs:
+  build:
+    name: Build Job
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.1.0
+      
+      - name: RunCompile
+        run: | 
+             echo 666
+             ./mvnw -B compile
