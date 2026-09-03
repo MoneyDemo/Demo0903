@@ -72,10 +72,28 @@ jobs:
             echo "| 結果 | ${{ job.status }} |"
           } >> "$GITHUB_STEP_SUMMARY"
 
+  ajob:
+    runs-on: ubuntu-24.04
+    needs: build
+    steps:
+      - name: Print
+        run: echo bjob
+
+  bjob:
+    runs-on: ubuntu-24.04
+    needs: build
+    steps:
+      - name: Print
+        run: echo ajob
+
+  
   deploy:
     runs-on: ubuntu-24.04
     environment: Test
-    
+    needs:
+      - build
+      - ajob
+      - bjob
     steps:
       - name: Print
         run: echo ${{ vars.Account }}
