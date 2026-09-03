@@ -8,6 +8,9 @@ on:
 permissions:
   contents: read
 
+env:
+  buildConfig: Debug
+
 jobs:
   build:
     name: Build Job
@@ -23,12 +26,16 @@ jobs:
           java-version: '21'
       
       - name: Build
+        env:
+          buildConfig: Release
         run: | 
-             echo 666
+             echo ${{ env.buildConfig }}
              ./mvnw -B compile
 
       - name: Build
         run: | 
+             echo ${{ env.buildConfig }}
+             echo ${{ secrets.SMTPPASSWORD }}
              ./mvnw -B verify
 
       - name: Test Report
@@ -62,4 +69,15 @@ jobs:
             echo "| 觸發事件 | \`${GITHUB_EVENT_NAME}\` |"
             echo "| 結果 | ${{ job.status }} |"
           } >> "$GITHUB_STEP_SUMMARY"
-  
+
+  deploy:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.1.0
+        with:
+          # Artifact name
+          name: simpleweb-jar
+          # Destination path
+          path: target/
+
